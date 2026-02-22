@@ -6,24 +6,65 @@
     <title>pragma64</title>
     <style>
       body {
-        font-family: system-ui, sans-serif;
-        max-width: 640px;
+        font-family: Garamond, serif;
+        max-width: 720px;
         margin: 2rem auto;
         padding: 0 1rem;
-        color: #222;
+        color: #ddd;
+        background: #111;
       }
-      a { color: #0057b7; }
-      ul { padding-left: 1.2rem; }
-      li { margin-bottom: 0.5rem; }
+      a { color: #6cb4ee; }
+      a:hover { color: #9dd0ff; }
+      h1 { color: #eee; }
+
+      .card {
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 1.25rem;
+        background: #1a1a1a;
+      }
+      .card img {
+        width: 100%;
+        border-radius: 4px;
+        margin-bottom: 0.75rem;
+      }
+      .card h3 {
+        margin: 0 0 0.4rem;
+        color: #eee;
+      }
+      .card p {
+        margin: 0 0 0.4rem;
+        color: #bbb;
+      }
+      .card .tech {
+        font-size: 0.85em;
+        color: #888;
+      }
     </style>
   </head>
   <body>
     <h1>pragma64</h1>
-    <p id="description">Project index for pragma64.com.</p>
-    <h2>Projects</h2>
-    <ul>
-      <li><a href="projects/clojure-prototype/">Clojure Prototype</a></li>
-      <li><a href="projects/void-wanderer/">Void Wanderer</a></li>
-    </ul>
+    <p id="description">
+      This site hosts my game dev prototypes.
+    </p>
+
+    <div class="card">
+      <a href="projects/void-wanderer/">
+        <img src="projects/void-wanderer/screenshot.jpg" alt="Void Wanderer screenshot" />
+      </a>
+      <h3><a href="projects/void-wanderer/">Void Wanderer</a></h3>
+      <p>First person action roguelike shooter set in space</p>
+      <p class="tech">Tech: TypeScript, React-Three-Fiber, Drei</p>
+    </div>
+
+    <div class="card">
+      <a href="projects/clojure-prototype/">
+        <img src="projects/clojure-prototype/screenshot.png" alt="Clojure Prototype screenshot" />
+      </a>
+      <h3><a href="projects/clojure-prototype/">Clojure Prototype</a></h3>
+      <p>Terrain generation prototype that generates a colorful island</p>
+      <p class="tech">Tech: Clojure, ClojureScript, ThreeJS</p>
+    </div>
   </body>
 </html>
