@@ -8,8 +8,8 @@
          wasm-opt. The dev index.html keeps data-wasm-opt="0" for fast rebuilds. -->
     
 <script type="module">
-import init, * as bindings from '/projects/aphelion/aphelion-b48f68561b9b9f78.js';
-const wasm = await init({ module_or_path: '/projects/aphelion/aphelion-b48f68561b9b9f78_bg.wasm' });
+import init, * as bindings from '/projects/aphelion/aphelion-862d7be389f160a9.js';
+const wasm = await init({ module_or_path: '/projects/aphelion/aphelion-862d7be389f160a9_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -24,7 +24,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
       /* Fill the window; Bevy's fit_canvas_to_parent handles sizing. */
       canvas { display: block; width: 100vw; height: 100vh; outline: none; }
     </style>
-  <link rel="modulepreload" href="/projects/aphelion/aphelion-b48f68561b9b9f78.js" crossorigin="anonymous" integrity="sha384-SLP7aJYlqS/C0tKltmXWmyACiqBfaaWN94Kck90ZVlv0oGIqADh2tDVCJS2ybxO+"><link rel="preload" href="/projects/aphelion/aphelion-b48f68561b9b9f78_bg.wasm" crossorigin="anonymous" integrity="sha384-9QSUFbxG70mRox0Q+Tq+RzB9cYddEBkv5DeWXyQccbo4InmXm/t9rlzUpDw5F0QB" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/projects/aphelion/aphelion-862d7be389f160a9.js" crossorigin="anonymous" integrity="sha384-SLP7aJYlqS/C0tKltmXWmyACiqBfaaWN94Kck90ZVlv0oGIqADh2tDVCJS2ybxO+"><link rel="preload" href="/projects/aphelion/aphelion-862d7be389f160a9_bg.wasm" crossorigin="anonymous" integrity="sha384-dF0W9gnJsUoh3ZyOqtaoTjnNZoPEHfB9UZe4jbTx6upVnuA5gPut6c/HViddxuid" as="fetch" type="application/wasm"></head>
   <body>
     <canvas id="bevy"></canvas>
   </body>
