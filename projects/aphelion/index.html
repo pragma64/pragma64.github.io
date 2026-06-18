@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>Aphelion</title>
+    <!-- Release build: optimize for size (-Oz). Trunk auto-fetches binaryen's
+         wasm-opt. The dev index.html keeps data-wasm-opt="0" for fast rebuilds. -->
+    
+<script type="module">
+import init, * as bindings from '/projects/aphelion/aphelion-b48f68561b9b9f78.js';
+const wasm = await init({ module_or_path: '/projects/aphelion/aphelion-b48f68561b9b9f78_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+    <style>
+      :root { background: #000; }
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+      /* Fill the window; Bevy's fit_canvas_to_parent handles sizing. */
+      canvas { display: block; width: 100vw; height: 100vh; outline: none; }
+    </style>
+  <link rel="modulepreload" href="/projects/aphelion/aphelion-b48f68561b9b9f78.js" crossorigin="anonymous" integrity="sha384-SLP7aJYlqS/C0tKltmXWmyACiqBfaaWN94Kck90ZVlv0oGIqADh2tDVCJS2ybxO+"><link rel="preload" href="/projects/aphelion/aphelion-b48f68561b9b9f78_bg.wasm" crossorigin="anonymous" integrity="sha384-9QSUFbxG70mRox0Q+Tq+RzB9cYddEBkv5DeWXyQccbo4InmXm/t9rlzUpDw5F0QB" as="fetch" type="application/wasm"></head>
+  <body>
+    <canvas id="bevy"></canvas>
+  </body>
+</html>

@@ -8,6 +8,7 @@ GitHub Pages site for **pragma64.com**.
 CNAME                          # Custom domain config
 index.html                     # Project index / landing page
 projects/
+  aphelion/                    # Aphelion (Rust + Bevy, WASM)
   clojure-prototype/           # ClojureScript 3D prototype (Three.js)
   void-wanderer/               # Void Wanderer (single-file bundle)
 ```
