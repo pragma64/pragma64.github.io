@@ -8,8 +8,8 @@
          wasm-opt. The dev index.html keeps data-wasm-opt="0" for fast rebuilds. -->
     
 <script type="module">
-import init, * as bindings from '/projects/nekyia/nekyia-66f6afde3f138d17.js';
-const wasm = await init({ module_or_path: '/projects/nekyia/nekyia-66f6afde3f138d17_bg.wasm' });
+import init, * as bindings from '/projects/nekyia/nekyia-76789ffa8fb8e1b6.js';
+const wasm = await init({ module_or_path: '/projects/nekyia/nekyia-76789ffa8fb8e1b6_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -51,7 +51,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
       /* Fill the window; Bevy's fit_canvas_to_parent handles sizing. */
       canvas { display: block; width: 100vw; height: 100vh; outline: none; }
     </style>
-  <link rel="modulepreload" href="/projects/nekyia/nekyia-66f6afde3f138d17.js" crossorigin="anonymous" integrity="sha384-DQHLTK6VhTrWR8gBJ9d1csWqvjEuO908Cfn+ppOOOMG91AX//0HGXz5xA/yu0YR2"><link rel="preload" href="/projects/nekyia/nekyia-66f6afde3f138d17_bg.wasm" crossorigin="anonymous" integrity="sha384-kpcL1NbJy7eb9Pu7LA6clWXol5XBLDOez1y74xPmbvY1/LnkzBnH+iaU06o2eiJI" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/projects/nekyia/nekyia-76789ffa8fb8e1b6.js" crossorigin="anonymous" integrity="sha384-Y8q/tIxsDCatxdyEOOASZO0QNF4n342KQ4Jc5ZW6oao6ciWUuZI9uxlm0IiNuG5p"><link rel="preload" href="/projects/nekyia/nekyia-76789ffa8fb8e1b6_bg.wasm" crossorigin="anonymous" integrity="sha384-hrxKtoo+f/jjggi8z0WMojHRGhYJ2cwoIbQHl4VV63eu9tnd4AktJqCdBEVNwDgW" as="fetch" type="application/wasm"></head>
   <body>
     <canvas id="bevy"></canvas>
   </body>
