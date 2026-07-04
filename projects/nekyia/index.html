@@ -8,8 +8,8 @@
          wasm-opt. The dev index.html keeps data-wasm-opt="0" for fast rebuilds. -->
     
 <script type="module">
-import init, * as bindings from '/projects/nekyia/nekyia-1f1c77945d2ce0d4.js';
-const wasm = await init({ module_or_path: '/projects/nekyia/nekyia-1f1c77945d2ce0d4_bg.wasm' });
+import init, * as bindings from '/projects/nekyia/nekyia-66f6afde3f138d17.js';
+const wasm = await init({ module_or_path: '/projects/nekyia/nekyia-66f6afde3f138d17_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -18,13 +18,40 @@ window.wasmBindings = bindings;
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
+    <script>
+      // Firefox leaves any AudioContext cpal (bevy_audio's wasm backend) creates
+      // permanently `suspended` — cpal calls resume() exactly once, from inside
+      // Bevy's ECS loop rather than a raw gesture handler, and Firefox is strict
+      // enough about that timing to never honor it (Chrome is lenient and just
+      // works). cpal doesn't expose the context it creates, so we can't reach in
+      // and resume the real one directly — instead we wrap the AudioContext
+      // constructor so every context ever created on this page (including
+      // cpal's) gets resume() retried on the next real user gesture. Standard
+      // workaround for this class of bug, per
+      // developer.chrome.com/blog/web-audio-autoplay.
+      (() => {
+        const Native = window.AudioContext || window.webkitAudioContext;
+        if (!Native) return;
+        const contexts = [];
+        window.AudioContext = window.webkitAudioContext = function (...args) {
+          const ctx = new Native(...args);
+          contexts.push(ctx);
+          return ctx;
+        };
+        window.AudioContext.prototype = Native.prototype;
+        const resumeAll = () => contexts.forEach((c) => c.state === "suspended" && c.resume());
+        ["click", "keydown", "touchend", "pointerdown"].forEach((evt) =>
+          document.addEventListener(evt, resumeAll)
+        );
+      })();
+    </script>
     <style>
       :root { background: #000; }
       html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
       /* Fill the window; Bevy's fit_canvas_to_parent handles sizing. */
       canvas { display: block; width: 100vw; height: 100vh; outline: none; }
     </style>
-  <link rel="modulepreload" href="/projects/nekyia/nekyia-1f1c77945d2ce0d4.js" crossorigin="anonymous" integrity="sha384-TmnlyQjFv2uFxXI36gxBlpTptPJ74BhnTex3Pyf13fcZYoA11r2jCeCL1gGWZgxA"><link rel="preload" href="/projects/nekyia/nekyia-1f1c77945d2ce0d4_bg.wasm" crossorigin="anonymous" integrity="sha384-gmWwmsMoC1Ls1UOPmfWensSRbSO6e+Tioi8YyqA14LeNMZxY78kwSazoJG9Ek8wI" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/projects/nekyia/nekyia-66f6afde3f138d17.js" crossorigin="anonymous" integrity="sha384-DQHLTK6VhTrWR8gBJ9d1csWqvjEuO908Cfn+ppOOOMG91AX//0HGXz5xA/yu0YR2"><link rel="preload" href="/projects/nekyia/nekyia-66f6afde3f138d17_bg.wasm" crossorigin="anonymous" integrity="sha384-kpcL1NbJy7eb9Pu7LA6clWXol5XBLDOez1y74xPmbvY1/LnkzBnH+iaU06o2eiJI" as="fetch" type="application/wasm"></head>
   <body>
     <canvas id="bevy"></canvas>
   </body>
