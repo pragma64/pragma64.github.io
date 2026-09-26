@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>Cosmos</title>
+    
+<script type="module">
+import init, * as bindings from '/projects/cosmos/cosmos-832c312b1f08761c.js';
+const wasm = await init({ module_or_path: '/projects/cosmos/cosmos-832c312b1f08761c_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+    <style>
+      :root { background: #000; }
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+      canvas { display: block; width: 100vw; height: 100vh; outline: none; }
+    </style>
+  <link rel="modulepreload" href="/projects/cosmos/cosmos-832c312b1f08761c.js" crossorigin="anonymous" integrity="sha384-XecR9H57E5ssgcD+S3SIyWmO1mVmrow5kJ2TTf0uPzFnDYMwBYWsHCVM7Gwr+NYh"><link rel="preload" href="/projects/cosmos/cosmos-832c312b1f08761c_bg.wasm" crossorigin="anonymous" integrity="sha384-SH1ddBl+tT8STLskwiWAC2rxECD/QckbX68Cki8BONABliXW/45YMFLIFPIUEhrO" as="fetch" type="application/wasm"></head>
+  <body>
+    <canvas id="bevy"></canvas>
+  </body>
+</html>
