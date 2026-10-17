@@ -6,8 +6,75 @@
     <title>Medieval</title>
     
 <script type="module">
-import init, * as bindings from '/projects/medieval/daggerfall-2adb266260b74e69.js';
-const wasm = await init({ module_or_path: '/projects/medieval/daggerfall-2adb266260b74e69_bg.wasm' });
+async function __trunkInitializer(init, source, sourceSize, initializer, initWithObject) {
+  if (initializer === undefined) {
+    return await init(initWithObject ? { module_or_path: source } : source);
+  }
+
+  const {
+    onStart, onProgress, onComplete, onSuccess, onFailure
+  } = initializer;
+
+  onStart?.();
+
+  const response = fetch(source)
+      .then((response) => {
+        const reader = response.body.getReader();
+        const headers = response.headers;
+        const status = response.status;
+        const statusText = response.statusText;
+
+        const total = sourceSize;
+        let current = 0;
+
+        const stream = new ReadableStream({
+          start(controller) {
+            function push() {
+              reader.read().then(({done, value}) => {
+                if (done) {
+                  onProgress?.({current: total, total});
+                  controller.close();
+                  return;
+                }
+
+                current += value.byteLength;
+                onProgress?.({current, total});
+                controller.enqueue(value);
+                push();
+              });
+            }
+
+            push();
+          },
+        });
+
+        return {
+          stream, init: {
+            headers, status, statusText
+          }
+        };
+      })
+      .then(({stream, init}) =>
+          new Response(stream, init),
+      );
+
+  return init(initWithObject ? { module_or_path: response } : response)
+      .then((value) => {
+        onComplete?.();
+        onSuccess?.(value);
+        return value;
+      }, (reason) => {
+        onComplete?.();
+        onFailure?.(reason);
+        return reason;
+      });
+}
+
+
+import init, * as bindings from '/projects/medieval/daggerfall-d14ef8b30ae8e5f6.js';
+import initializer from '/projects/medieval/9944ad0435780866-loader.js';
+
+const wasm = await __trunkInitializer(init, '/projects/medieval/daggerfall-d14ef8b30ae8e5f6_bg.wasm', 55431447, initializer(), true);
 
 
 window.wasmBindings = bindings;
@@ -16,13 +83,55 @@ window.wasmBindings = bindings;
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
+    
     <style>
-      :root { background: #000; }
+      @font-face { font-family: Alegreya; font-style: italic; src: url(alegreya-italic.ttf); }
+      :root { background: #000; color: #e8dcc0; }
       html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
       canvas { display: block; width: 100vw; height: 100vh; outline: none; }
+      #loader {
+        position: fixed; inset: 0; display: grid; place-content: center; gap: 14px;
+        background: #000; font: italic 18px Alegreya, Georgia, serif; text-align: center;
+        transition: opacity 0.6s;
+      }
+      #loader.gone { opacity: 0; pointer-events: none; }
+      #loader .bar { width: min(360px, 70vw); height: 3px; background: #2a2622; overflow: hidden; }
+      #loader .fill { height: 100%; width: 0; background: #e8dcc0; transition: width 0.15s linear; }
+      #loader .count { font-size: 14px; color: #8a8070; font-variant-numeric: tabular-nums; }
+      #loader.failed .bar { background: #6b2a22; }
+      #loader.failed .note { max-width: 70vw; white-space: pre-wrap; }
     </style>
-  <link rel="modulepreload" href="/projects/medieval/daggerfall-2adb266260b74e69.js" crossorigin="anonymous" integrity="sha384-XDg7FmczIOHj22BpjWDCV7xmz7EgBZsrufAWpUsMq5pDVIVV9Q8ltd4fxKPC/Oqq"><link rel="preload" href="/projects/medieval/daggerfall-2adb266260b74e69_bg.wasm" crossorigin="anonymous" integrity="sha384-NK88qp+x83VKWqNa12bg+F8dEROZm2mKqFWsx+enauHWiGiVorG/rtBF54inl0Uo" as="fetch" type="application/wasm"></head>
+  <link rel="modulepreload" href="/projects/medieval/daggerfall-d14ef8b30ae8e5f6.js" crossorigin="anonymous" integrity="sha384-F243z+s/TnkJa3odIp+za6nTvfDvcdgcKVFc9b5Z1jic5b0pWVhONwcuIuzu8Nl7"><link rel="modulepreload" href="/projects/medieval/9944ad0435780866-loader.js" crossorigin="anonymous" integrity="sha384-JGEQeq1bRakvrAnNOQ9ZzGDF1W9LfSj2ZxJLBV1MhlDRilLXG8RZ7IBtU1n+FIjq"><link rel="preload" href="/projects/medieval/daggerfall-d14ef8b30ae8e5f6_bg.wasm" crossorigin="anonymous" integrity="sha384-FfFYSLZkEyEmKyKUUhaDp6CMoZT57WYAzajpReN9jSc0/5BPP/oSe2PeLeDInYvM" as="fetch" type="application/wasm"></head>
   <body>
     <canvas id="bevy"></canvas>
+    <div id="loader" data-bytes="35542488">
+      <div class="note">Fetching the realm</div>
+      <div class="bar"><div class="fill"></div></div>
+      <div class="count">&nbsp;</div>
+    </div>
+    <script>
+      if (!navigator.gpu) {
+        window.stop();
+        document.getElementById("loader").classList.add("failed");
+        document.querySelector("#loader .note").textContent =
+          "This needs WebGPU.\nOpen it in Chrome, Edge or Safari.";
+      }
+      (() => {
+        const contexts = [];
+        const Native = window.AudioContext || window.webkitAudioContext;
+        window.AudioContext = window.webkitAudioContext = new Proxy(Native, {
+          construct(target, args) {
+            const context = new target(...args);
+            contexts.push(context);
+            return context;
+          },
+        });
+        const wake = () => {
+          for (const context of contexts) if (context.state === "suspended") context.resume();
+        };
+        for (const event of ["pointerdown", "keydown", "touchend"])
+          document.addEventListener(event, wake, { capture: true });
+      })();
+    </script>
   </body>
 </html>
